@@ -1,0 +1,69 @@
+---
+title: "Install ERPNext"
+description: "Get the ERPNext app from the Frappe registry or GitHub, then install it on your Frappe site."
+---
+
+With your Frappe bench and site ready, you can now fetch and install the ERPNext application.
+
+## Get the ERPNext app
+
+Run one of the following commands from inside your `frappe-bench` directory to download ERPNext:
+
+<CodeGroup>
+
+```bash Frappe registry
+bench get-app erpnext --branch version-15
+```
+
+```bash GitHub
+bench get-app https://github.com/frappe/erpnext --branch version-15
+```
+
+</CodeGroup>
+
+<Note>
+  Both commands download the same code. Use the GitHub URL if you have trouble resolving the Frappe registry, or if you want to fork ERPNext.
+</Note>
+
+## Install ERPNext on your site
+
+Once the app is downloaded, install it on the site you created:
+
+```bash
+bench --site dcode.com install-app erpnext
+```
+
+Replace `dcode.com` with your actual site name.
+
+This command runs all ERPNext database migrations and sets up the application data.
+
+## Start the bench
+
+```bash
+bench start
+```
+
+Open `http://localhost:8000` in your browser, log in with your administrator credentials, and you should see the ERPNext desk.
+
+<Warning>
+  The first load after installing ERPNext may be slow as assets are compiled. Subsequent loads will be faster.
+</Warning>
+
+## Next steps
+
+Your Frappe and ERPNext installation is complete. You can now:
+
+<CardGroup cols={2}>
+  <Card title="Production setup" icon="server" href="/production/production-setup">
+    Configure Nginx and Supervisor for a production deployment
+  </Card>
+  <Card title="Multi-site setup" icon="globe" href="/production/multi-site">
+    Host multiple ERPNext sites on the same server
+  </Card>
+  <Card title="SSL certificates" icon="lock" href="/production/ssl-certificates">
+    Set up Let's Encrypt SSL certificates for your domain
+  </Card>
+  <Card title="Bench commands" icon="terminal" href="/reference/bench-commands">
+    Reference guide for common bench CLI commands
+  </Card>
+</CardGroup>

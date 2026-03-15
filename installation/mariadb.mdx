@@ -1,0 +1,105 @@
+---
+title: "MariaDB setup"
+description: "Install MariaDB 10.3 and configure it for UTF-8 Unicode support on Ubuntu 18.04 and 20.04."
+---
+
+Frappe requires MariaDB 10.3.x as its primary database. The installation commands differ slightly between Ubuntu versions.
+
+## Install MariaDB
+
+<Tabs>
+  <Tab title="Ubuntu 20.04">
+    ```bash
+    sudo apt-get install software-properties-common
+    sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
+    sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://ftp.icm.edu.pl/pub/unix/database/mariadb/repo/10.3/ubuntu focal main'
+    sudo apt update
+    sudo apt install mariadb-server
+    ```
+  </Tab>
+  <Tab title="Ubuntu 18.04">
+    ```bash
+    sudo apt-get install software-properties-common dirmngr apt-transport-https
+    sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
+    sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mirrors.aliyun.com/mariadb/repo/10.3/ubuntu bionic main'
+    sudo apt update
+    sudo apt install mariadb-server
+    ```
+  </Tab>
+</Tabs>
+
+## Secure the installation
+
+After installation, run the security script to set a root password and remove insecure defaults:
+
+```bash
+sudo mysql_secure_installation
+```
+
+When prompted:
+
+- Set a strong root password
+- Remove anonymous users — **yes**
+- Disallow remote root login — **yes**
+- Remove the test database — **yes**
+- Reload privileges — **yes**
+
+## Configure Unicode support
+
+Frappe stores data in UTF-8 (`utf8mb4`). You must configure MariaDB to use this character set before creating any Frappe sites.
+
+<Steps>
+  <Step title="Install nano">
+    ```bash
+    sudo apt install nano
+    ```
+  </Step>
+
+  <Step title="Edit the MariaDB configuration file">
+    ```bash
+    sudo nano /etc/mysql/my.cnf
+    ```
+
+    Add the following configuration to the end of the file:
+
+    ```ini
+    [mysqld]
+    character-set-client-handshake = FALSE
+    character-set-server = utf8mb4
+    collation-server = utf8mb4_unicode_ci
+
+    [mysql]
+    default-character-set = utf8mb4
+    ```
+
+    Save the file with **Ctrl+O**, then exit with **Ctrl+X**.
+  </Step>
+
+  <Step title="Restart MariaDB">
+    Apply the configuration changes by restarting the service:
+
+    ```bash
+    sudo service mysql restart
+    ```
+  </Step>
+</Steps>
+
+<Warning>
+  Do not skip the Unicode configuration. Frappe will fail to store emoji and many non-ASCII characters if the database uses the default `latin1` character set.
+</Warning>
+
+## Verify the configuration
+
+Confirm that MariaDB is running and the character set is applied correctly:
+
+```bash
+sudo mysql -u root -p -e "SHOW VARIABLES LIKE 'character_set_server';"
+```
+
+The output should show `utf8mb4`.
+
+## Next step
+
+<Card title="Install Redis and Node.js" icon="bolt" href="/installation/redis-nodejs">
+  Install Redis server, Node.js 20.x, and Yarn
+</Card>

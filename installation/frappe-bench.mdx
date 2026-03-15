@@ -1,0 +1,83 @@
+---
+title: "Frappe Bench"
+description: "Install the frappe-bench CLI and initialize a new Frappe bench running version 15."
+---
+
+`bench` is the command-line tool that manages Frappe applications, sites, and background workers. You install it as a Python package, then use it to initialize your Frappe environment.
+
+## Install frappe-bench
+
+Choose the installation method that matches your environment:
+
+<Tabs>
+  <Tab title="Server">
+    For a server or production-like environment, install without `sudo -H`:
+
+    ```bash
+    pip3 install frappe-bench
+    ```
+  </Tab>
+  <Tab title="Local development">
+    For a local development machine, use `sudo -H` to install into the system Python:
+
+    ```bash
+    sudo -H pip3 install frappe-bench
+    ```
+  </Tab>
+</Tabs>
+
+Verify the installation:
+
+```bash
+bench --version
+```
+
+<Note>
+  If `bench` is not found after installation, your `~/.local/bin` directory may not be in your `PATH`. Add `export PATH=$PATH:~/.local/bin` to your `~/.bashrc` or `~/.profile` and reload your shell.
+</Note>
+
+## Initialize the Frappe bench
+
+Create a working directory and initialize the bench. This downloads the Frappe framework and sets up a Python virtual environment.
+
+<Steps>
+  <Step title="Create and enter the bench directory">
+    ```bash
+    mkdir frappe-bench
+    cd frappe-bench
+    ```
+  </Step>
+
+  <Step title="Initialize the bench">
+    ```bash
+    bench init frappe-bench --frappe-branch version-15
+    ```
+
+    This command:
+    - Creates a Python virtual environment
+    - Clones the Frappe framework at `version-15`
+    - Installs all Python and JavaScript dependencies
+
+    <Warning>
+      This step can take several minutes depending on your internet connection and hardware. Do not interrupt the process.
+    </Warning>
+  </Step>
+
+  <Step title="Start the development server">
+    ```bash
+    bench start
+    ```
+
+    This starts all Frappe services (web server, background workers, Redis, and the scheduler) in the foreground.
+  </Step>
+</Steps>
+
+<Tip>
+  Keep `bench start` running in one terminal and open a second terminal to run other `bench` commands. Use **Ctrl+C** to stop all services.
+</Tip>
+
+## Next step
+
+<Card title="Create a site" icon="globe" href="/installation/create-site">
+  Create your first Frappe site
+</Card>

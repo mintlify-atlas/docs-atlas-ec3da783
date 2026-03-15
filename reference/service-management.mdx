@@ -1,0 +1,86 @@
+---
+title: "Service management"
+description: "Commands for starting, stopping, restarting, and checking the status of MariaDB, Redis, Supervisor, and Nginx."
+---
+
+Frappe depends on four system services: **MariaDB**, **Redis**, **Supervisor**, and **Nginx**. Use the commands below to manage each service after installation or configuration changes.
+
+<Tabs>
+  <Tab title="MariaDB">
+    ```bash
+    # Start
+    sudo service mysql start
+    sudo systemctl start mariadb
+
+    # Stop
+    sudo service mysql stop
+    sudo systemctl stop mariadb
+
+    # Restart
+    sudo service mysql restart
+    ```
+
+    <Note>
+      Both `service mysql` and `systemctl mariadb` target the same process. Use whichever is consistent with your system's init setup.
+    </Note>
+  </Tab>
+
+  <Tab title="Redis">
+    ```bash
+    # Start
+    sudo service redis-server start
+
+    # Stop
+    sudo service redis-server stop
+
+    # Restart
+    sudo service redis-server restart
+
+    # Status
+    sudo service redis-server status
+    ```
+  </Tab>
+
+  <Tab title="Supervisor">
+    ```bash
+    # Start
+    sudo service supervisor start
+
+    # Restart
+    sudo service supervisor restart
+    sudo -A systemctl restart supervisor
+
+    # Status
+    sudo service supervisor status
+    ```
+  </Tab>
+
+  <Tab title="Nginx">
+    ```bash
+    # Start
+    sudo service nginx start
+
+    # Stop
+    sudo service nginx stop
+
+    # Reload configuration (no downtime)
+    sudo service nginx reload
+
+    # Status
+    sudo service nginx status
+    ```
+
+    <Tip>
+      Use `reload` instead of `restart` when you only change the Nginx configuration. Reload applies the new config without dropping active connections.
+    </Tip>
+  </Tab>
+</Tabs>
+
+## Quick reference
+
+| Service | Start | Stop | Restart | Status |
+|---|---|---|---|---|
+| MariaDB | `sudo service mysql start` | `sudo service mysql stop` | `sudo service mysql restart` | — |
+| Redis | `sudo service redis-server start` | `sudo service redis-server stop` | `sudo service redis-server restart` | `sudo service redis-server status` |
+| Supervisor | `sudo service supervisor start` | — | `sudo service supervisor restart` | `sudo service supervisor status` |
+| Nginx | `sudo service nginx start` | `sudo service nginx stop` | `sudo service nginx reload` | `sudo service nginx status` |

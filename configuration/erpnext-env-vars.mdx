@@ -1,0 +1,59 @@
+---
+title: "ERPNext Environment Variables"
+description: "Configure ERPNext API credentials and connection settings using environment variables."
+---
+
+When integrating external services or custom applications with ERPNext, you need to supply API credentials and the target URL via environment variables or configuration files.
+
+## Required variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `ERPNEXT_API_KEY` | API key from ERPNext user settings | `ad43b3e0a015a82` |
+| `ERPNEXT_API_SECRET` | API secret from ERPNext user settings | `d550eb2103b2a9b` |
+| `ERPNEXT_URL` | Base URL of your ERPNext instance | `http://dev.local:8000` |
+| `ERPNEXT_VERSION` | ERPNext major version number | `15` |
+
+## Setting the variables
+
+<CodeGroup>
+
+```bash Shell export
+export ERPNEXT_API_KEY='ad43b3e0a015a82'
+export ERPNEXT_API_SECRET='d550eb2103b2a9b'
+export ERPNEXT_URL='http://dev.local:8000'
+export ERPNEXT_VERSION=15
+```
+
+```bash .env file
+ERPNEXT_API_KEY=ad43b3e0a015a82
+ERPNEXT_API_SECRET=d550eb2103b2a9b
+ERPNEXT_URL=http://dev.local:8000
+ERPNEXT_VERSION=15
+```
+
+</CodeGroup>
+
+## Generating API keys in ERPNext
+
+<Steps>
+  <Step title="Open user settings">
+    In ERPNext, go to **Settings > My Settings** or navigate to the user record in **User List**.
+  </Step>
+
+  <Step title="Generate API key and secret">
+    Scroll to the **API Access** section and click **Generate Keys**. ERPNext will display the API key and secret once — save both immediately.
+  </Step>
+
+  <Step title="Set the variables in your environment">
+    Copy the generated values into your environment configuration using one of the methods shown above.
+  </Step>
+</Steps>
+
+<Warning>
+  The API secret is shown only once at generation time. If you lose it, you must regenerate the keys, which will invalidate any existing integrations using the old credentials.
+</Warning>
+
+<Note>
+  For production deployments, avoid hardcoding credentials in source code. Use a secrets manager, `.env` file outside the repository, or your deployment platform's secrets feature.
+</Note>

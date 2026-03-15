@@ -1,0 +1,63 @@
+---
+title: "Troubleshooting"
+description: "Solutions for common issues encountered when installing and configuring Frappe and ERPNext."
+---
+
+<AccordionGroup>
+  <Accordion title="MySQL root password prompt does not appear" defaultOpen={true}>
+    If the MariaDB installation finishes without prompting you to set a root password, run the secure installation script manually:
+
+    ```bash
+    sudo mysql_secure_installation
+    ```
+
+    Follow the prompts to set the root password, remove anonymous users, and disable remote root login.
+
+    <Note>
+      If you are still unable to authenticate as the MySQL root user after running `mysql_secure_installation`, see the [Changing the MySQL root password](/configuration/change-mysql-password) guide.
+    </Note>
+  </Accordion>
+
+  <Accordion title="Cannot connect to MySQL as root">
+    On some systems, MariaDB defaults to `unix_socket` authentication, which means the root account can only be accessed by the system's `root` user.
+
+    **Option 1 — Use sudo:**
+    ```bash
+    sudo mysql -u root
+    ```
+
+    **Option 2 — Change the authentication method:**
+
+    Follow the [Changing the MySQL root password](/configuration/change-mysql-password) guide to switch the root account to password-based authentication.
+  </Accordion>
+
+  <Accordion title="Yarn errors during installation">
+    If you encounter errors related to Yarn (for example, version conflicts or a broken global installation), remove the existing Yarn installation and let bench reinstall it:
+
+    <Steps>
+      <Step title="Uninstall Yarn globally">
+        ```bash
+        sudo npm uninstall -g yarn
+        ```
+      </Step>
+      <Step title="Remove the Yarn binary">
+        ```bash
+        sudo rm -rf /usr/bin/yarn
+        ```
+      </Step>
+      <Step title="Retry the bench command">
+        Re-run the `bench init` or `bench update` command that triggered the error. Bench will install a compatible version of Yarn automatically.
+      </Step>
+    </Steps>
+
+    <Warning>
+      Do not reinstall Yarn manually before retrying. Let bench manage the Yarn installation to avoid version mismatches.
+    </Warning>
+  </Accordion>
+
+  <Accordion title="bench start fails with a port already in use error">
+    A previous bench process may still be running. Use the network check commands to identify and terminate the conflicting process.
+
+    See [Network check](/reference/network-check) for the commands to find and kill processes by port.
+  </Accordion>
+</AccordionGroup>

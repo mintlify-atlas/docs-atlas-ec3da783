@@ -1,122 +1,121 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Frappe & ERPNext Installation Guide",
+  "theme": "linden",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#b26c55",
+    "light": "#1d2d5a",
+    "dark": "#664e5a"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "https://media.brand.dev/843b00cc-e0b9-4bb8-a4e3-8283f21fc014.png",
+  "logo": {
+    "light": "https://media.brand.dev/02b454df-9cb3-41f4-9749-d2c9d54f54e1.svg",
+    "dark": "https://media.brand.dev/02b454df-9cb3-41f4-9749-d2c9d54f54e1.svg"
+  },
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/ahmedalbanna/Frappe-installation-Guide"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/ahmedalbanna/Frappe-installation-Guide"
+    }
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Installation Guide",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Overview",
+            "pages": ["introduction", "prerequisites"]
+          },
+          {
+            "group": "Ubuntu Installation",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "installation/system-packages",
+              "installation/mariadb",
+              "installation/redis-nodejs",
+              "installation/frappe-bench",
+              "installation/create-site",
+              "installation/install-erpnext"
             ]
           },
           {
-            "group": "Customization",
+            "group": "ArchLinux Installation",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "archlinux/install-archlinux"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Production Setup",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "production/production-setup",
+              "production/nginx-supervisor",
+              "production/multi-site",
+              "production/ssl-certificates"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Configuration",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Database",
             "pages": [
-              "api-reference/introduction"
+              "configuration/mariadb-unicode",
+              "configuration/change-mysql-password",
+              "configuration/move-mysql-datadir",
+              "configuration/mysql-users"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Services",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "configuration/redis-config",
+              "configuration/supervisor-config",
+              "configuration/nginx-config"
+            ]
+          },
+          {
+            "group": "Frappe & ERPNext",
+            "pages": [
+              "configuration/erpnext-env-vars",
+              "configuration/disable-csrf",
+              "configuration/dns-multitenancy"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Reference",
+        "groups": [
+          {
+            "group": "Bash Scripts",
+            "pages": [
+              "reference/automation-scripts"
+            ]
+          },
+          {
+            "group": "Commands",
+            "pages": [
+              "reference/bench-commands",
+              "reference/linux-commands",
+              "reference/service-management"
+            ]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": [
+              "reference/troubleshooting",
+              "reference/network-check"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    ]
   }
 }

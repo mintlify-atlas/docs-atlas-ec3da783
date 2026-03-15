@@ -1,0 +1,61 @@
+---
+title: "Multi-site Configuration"
+description: "Configure multiple ERPNext sites on a single server using port-based routing when DNS-based multitenancy is not available."
+---
+
+When DNS-based multitenancy is not suitable, you can serve each site on a distinct port using Nginx.
+
+<Steps>
+  <Step title="Disable DNS-based multitenancy">
+    ```bash
+    bench config dns_multitenant off
+    ```
+  </Step>
+
+  <Step title="Create a new site">
+    ```bash
+    bench new-site site2name
+    ```
+  </Step>
+
+  <Step title="Assign a port to the new site">
+    Set a unique port number for the site. Each site must use a different port:
+
+    ```bash
+    bench set-nginx-port site2name 82
+    ```
+
+    <Note>
+      Port `80` is reserved for the default site. Use a port above `81` for additional sites.
+    </Note>
+  </Step>
+
+  <Step title="Regenerate the Nginx configuration">
+    ```bash
+    bench setup nginx
+    ```
+  </Step>
+
+  <Step title="Reload Nginx and restart Supervisor">
+    Apply the new configuration:
+
+    ```bash
+    sudo service nginx reload
+    sudo service supervisor restart
+    ```
+  </Step>
+</Steps>
+
+<Tip>
+  To re-enable DNS-based multitenancy at any time, run:
+
+  ```bash
+  bench config dns_multitenant on
+  ```
+
+  Then set the active site by editing `sites/currentsite.txt`:
+
+  ```bash
+  nano sites/currentsite.txt
+  ```
+</Tip>

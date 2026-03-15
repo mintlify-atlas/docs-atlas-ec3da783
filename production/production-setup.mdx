@@ -1,0 +1,54 @@
+---
+title: "Production Setup"
+description: "Create a dedicated system user and configure ERPNext for production using bench setup production."
+---
+
+<Steps>
+  <Step title="Create a dedicated user">
+    Create a new system user for running Frappe and grant it sudo access:
+
+    ```bash
+    sudo adduser dcode-frappe
+    sudo usermod -aG sudo dcode-frappe
+    su - dcode-frappe
+    ```
+  </Step>
+
+  <Step title="Set up a Python virtual environment">
+    Create and activate a virtual environment for the new user:
+
+    ```bash
+    python3 -m venv /path/to/my_env
+    source /path/to/my_env/bin/activate
+    ```
+  </Step>
+
+  <Step title="Install Frappe bench and initialize">
+    Follow the standard installation steps to install `frappe-bench`, initialize the bench directory, create a site, and install ERPNext.
+
+    <Tip>
+      Refer to the main installation guide for the full commands covering these steps.
+    </Tip>
+  </Step>
+
+  <Step title="Run bench setup production">
+    Configure Nginx, Supervisor, and system services for production:
+
+    ```bash
+    sudo bench setup production dcode-frappe
+    bench restart
+    ```
+
+    <Note>
+      Replace `dcode-frappe` with the username of the dedicated user you created in step 1.
+    </Note>
+  </Step>
+
+  <Step title="Verify the deployment">
+    Open your server's IP address in a web browser. ERPNext should be accessible on port 80.
+
+    <Check>
+      If the login page loads, your production setup is complete.
+    </Check>
+  </Step>
+</Steps>

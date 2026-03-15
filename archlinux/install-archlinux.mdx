@@ -1,0 +1,96 @@
+---
+title: "Install ERPNext on ArchLinux"
+description: "Step-by-step guide to installing ERPNext on ArchLinux, including MariaDB setup, Redis, and the Frappe bench toolchain."
+---
+
+<Steps>
+  <Step title="Install pre-requisites">
+    Update your system and install all required packages:
+
+    ```bash
+    pacman -Syu
+    pacman -S mariadb redis python2-pip wkhtmltopdf git npm cronie nginx openssl
+    npm install -g yarn
+    ```
+  </Step>
+
+  <Step title="Set up MariaDB">
+    Initialize the database, start the service, and run the secure installation wizard:
+
+    ```bash
+    mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+    systemctl start mariadb
+    mysql_secure_installation
+    ```
+
+    Then edit the MariaDB configuration file to add the required settings:
+
+    ```bash
+    nano /etc/mysql/my.cnf
+    ```
+
+    Add the following sections:
+
+    ```ini
+    [mysqld]
+    innodb-file-format=barracuda
+    innodb-file-per-table=1
+    innodb-large-prefix=1
+    character-set-client-handshake = FALSE
+    character-set-server = utf8mb4
+    collation-server = utf8mb4_unicode_ci
+
+    [mysql]
+    default-character-set = utf8mb4
+    ```
+  </Step>
+
+  <Step title="Start services">
+    Start MariaDB and Redis:
+
+    ```bash
+    systemctl start mariadb redis
+    ```
+
+    <Note>
+      If you do not have the cron service enabled, enable it now:
+
+      ```bash
+      systemctl enable cronie
+      ```
+    </Note>
+  </Step>
+
+  <Step title="Install ERPNext">
+    Clone the bench repository, install it for your user, and update your shell path:
+
+    ```bash
+    git clone https://github.com/frappe/bench bench-repo
+    pip2 install --user -e bench-repo
+    echo "export PATH=$HOME/.local/bin:$PATH" >> ~/.bashrc
+    source ~/.bashrc
+    ```
+  </Step>
+
+  <Step title="Initialize bench and create a site">
+    Initialize the bench directory, fetch the ERPNext app, create a site, and install the app:
+
+    ```bash
+    bench init frappe-bench && cd frappe-bench
+    bench get-app erpnext https://github.com/frappe/erpnext
+    bench new-site site1.local
+    bench --site site1.local install-app erpnext
+    bench use site1.local
+    ```
+  </Step>
+
+  <Step title="Start the development server">
+    ```bash
+    bench start
+    ```
+
+    <Check>
+      Open [http://localhost:8000](http://localhost:8000) in your browser. ERPNext is now running.
+    </Check>
+  </Step>
+</Steps>

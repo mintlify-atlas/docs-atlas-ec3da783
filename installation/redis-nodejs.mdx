@@ -1,0 +1,58 @@
+---
+title: "Redis and Node.js"
+description: "Install Redis, Node.js 20.x, and Yarn — required for Frappe's background jobs and asset pipeline."
+---
+
+Frappe uses Redis for caching and job queues, and Node.js for building the JavaScript asset pipeline. Yarn is the package manager used by Frappe to install JavaScript dependencies.
+
+<Steps>
+  <Step title="Install Redis">
+    ```bash
+    sudo apt-get install redis-server
+    ```
+
+    <Note>
+      Redis is also listed in the [system packages](/installation/system-packages) step. If you already installed it there, you can skip this step.
+    </Note>
+  </Step>
+
+  <Step title="Install Node.js 20.x">
+    Use the NodeSource setup script to add the Node.js 20.x repository, then install it:
+
+    ```bash
+    sudo apt-get install curl
+    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+    ```
+
+    Verify the installation:
+
+    ```bash
+    node -v
+    ```
+
+    <Tip>
+      Node.js 20.x is the current LTS release and the version recommended for Frappe version 15. Using older versions may cause asset build failures.
+    </Tip>
+  </Step>
+
+  <Step title="Install Yarn">
+    Install Yarn globally using npm:
+
+    ```bash
+    sudo npm install -g yarn
+    ```
+
+    Verify the installation:
+
+    ```bash
+    yarn --version
+    ```
+  </Step>
+</Steps>
+
+## Next step
+
+<Card title="Install Frappe Bench" icon="terminal" href="/installation/frappe-bench">
+  Install the frappe-bench CLI and initialize your first bench
+</Card>

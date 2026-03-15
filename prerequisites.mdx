@@ -1,0 +1,63 @@
+---
+title: "Prerequisites"
+description: "System requirements you must meet before installing Frappe and ERPNext on Ubuntu."
+---
+
+Before you begin the installation, verify that your Ubuntu system meets the following requirements. Installing on an unsupported version or with outdated packages may cause errors that are difficult to diagnose.
+
+## Supported Ubuntu versions
+
+- Ubuntu 18.04 LTS (Bionic Beaver)
+- Ubuntu 20.04 LTS (Focal Fossa)
+- Ubuntu 22.04 LTS (Jammy Jellyfish)
+
+## Required software
+
+| Component | Minimum version | Notes |
+|-----------|----------------|-------|
+| Python | 3.6 | Python 3.10+ recommended for Ubuntu 22.04 |
+| Node.js | 14 | Version 20.x recommended |
+| Redis | 5 | Used for caching and background jobs |
+| MariaDB | 10.3.x | PostgreSQL 9.5.x is also supported |
+| Yarn | 1.12 | JavaScript package manager |
+| pip | 20 | Python package installer |
+| wkhtmltopdf | 0.12.5 | Must be the patched Qt build for PDF generation |
+| Cron | Any | Required for scheduled tasks and certificate renewals |
+| Nginx | Any | Required for production multi-tenant setups |
+
+<Warning>
+  Use **wkhtmltopdf 0.12.5 with patched Qt**. The standard build does not support all PDF features. Install it via the `xvfb libfontconfig wkhtmltopdf` apt packages as shown in the system packages step.
+</Warning>
+
+## Hardware recommendations
+
+| Environment | RAM | Disk |
+|-------------|-----|------|
+| Development | 4 GB | 20 GB |
+| Production (single site) | 8 GB | 50 GB |
+| Production (multi-site) | 16 GB+ | 100 GB+ |
+
+<Note>
+  These are minimum recommendations. ERPNext workloads vary significantly depending on the number of users, documents, and background jobs.
+</Note>
+
+## Before you start
+
+Ensure you have:
+
+- A user account with `sudo` privileges
+- A stable internet connection to download packages
+- A fully qualified domain name (FQDN) if you plan to set up a production server with SSL
+
+## Next steps
+
+Once your system meets these requirements, proceed to install the system packages:
+
+<CardGroup cols={2}>
+  <Card title="System packages" icon="package" href="/installation/system-packages">
+    Install Git, Python, pip, virtualenv, Redis, and other dependencies
+  </Card>
+  <Card title="MariaDB setup" icon="database" href="/installation/mariadb">
+    Install and configure the MariaDB database server
+  </Card>
+</CardGroup>

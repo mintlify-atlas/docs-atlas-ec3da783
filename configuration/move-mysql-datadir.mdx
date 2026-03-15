@@ -1,0 +1,101 @@
+---
+title: "Move MySQL Data Directory"
+description: "Relocate the MariaDB data directory to a different path, such as a larger disk partition."
+---
+
+By default, MariaDB stores all database files in `/var/lib/mysql`. If that partition runs low on space, you can move the data directory to a different location.
+
+<Warning>
+  This operation stops your database. Plan for downtime before proceeding on a production system. Ensure the target directory has sufficient free space before starting.
+</Warning>
+
+## Prerequisites
+
+- Enough free disk space at the target path
+- Root or `sudo` access
+- `rsync` installed (`sudo apt install rsync`)
+
+## Move the data directory
+
+<Steps>
+  <Step title="Stop MariaDB">
+    <CodeGroup>
+
+    ```bash systemd
+    sudo systemctl stop mariadb
+    ```
+
+    ```bash SysV
+    sudo service mysql stop
+    ```
+
+    </CodeGroup>
+  </Step>
+
+  <Step title="Copy data to the new location">
+    Use `rsync` to copy the data directory while preserving permissions and symlinks. Replace `/path/to/new/directory` with your target path:
+
+    ```bash
+    sudo rsync -av /var/lib/mysql/* /path/to/new/directory
+    ```
+  </Step>
+
+  <Step title="Set correct ownership">
+    ```bash
+    sudo chown -R mysql:mysql /path/to/new/directory
+    ```
+  </Step>
+
+  <Step title="Update the MariaDB configuration">
+    Edit the MariaDB configuration file. Depending on your distro, this is either:
+
+    - `/etc/mysql/my.cnf`
+    - `/etc/mysql/mariadb.conf.d/50-server.cnf`
+
+    Find the `datadir` line and update it:
+
+    ```ini
+    [mysqld]
+    datadir = /path/to/new/directory
+    ```
+  </Step>
+
+  <Step title="Start MariaDB">
+    <CodeGroup>
+
+    ```bash systemd
+    sudo systemctl start mariadb
+    ```
+
+    ```bash SysV
+    sudo service mysql start
+    ```
+
+    </CodeGroup>
+  </Step>
+
+  <Step title="Verify the service is running correctly">
+    Check that MariaDB started without errors:
+
+    ```bash
+    sudo systemctl status mariadb
+    sudo mysql -u root -p -e "SELECT @@datadir;"
+    ```
+
+    The `@@datadir` output should show your new path.
+  </Step>
+</Steps>
+
+## After moving the data directory
+
+<Note>
+  You may need to run `bench restart` after changing the MySQL data directory so that Frappe reconnects to the database correctly.
+</Note>
+
+If MariaDB fails to start after the move, check the logs for permission or AppArmor/SELinux errors:
+
+```bash
+sudo journalctl -u mariadb -n 50
+```
+
+Different filesystems (e.g., NFS, XFS) may require additional permission adjustments. Consult your filesystem documentation if you encounter issues.

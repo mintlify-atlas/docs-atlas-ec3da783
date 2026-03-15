@@ -1,0 +1,86 @@
+---
+title: "Linux commands"
+description: "Linux commands for viewing user details, group memberships, and login session history."
+---
+
+These commands are useful when auditing user access, verifying the system user created for Frappe, or investigating login activity on your server.
+
+## User and group information
+
+| Command | Syntax | Description |
+|---|---|---|
+| `id` | `id <username>` | Show the user's UID, GID, and all group memberships |
+| `groups` | `groups <username>` | List the groups a user belongs to |
+| `finger` | `finger <username>` | Display detailed user account information |
+| `getent` | `getent passwd <username>` | Fetch user account data from the system database |
+| `grep` | `grep <username> /etc/passwd` | Search the passwd file for a user entry |
+| `lslogins` | `lslogins -u` | Display a table of all user login details |
+
+<CodeGroup>
+
+```bash id
+id frappe-user
+```
+
+```bash groups
+groups frappe-user
+```
+
+```bash finger
+finger frappe-user
+```
+
+```bash getent
+getent passwd frappe-user
+```
+
+```bash grep
+grep frappe-user /etc/passwd
+```
+
+```bash lslogins
+lslogins -u
+```
+
+</CodeGroup>
+
+## Active session monitoring
+
+| Command | Syntax | Description |
+|---|---|---|
+| `users` | `users` | List the usernames of all currently logged-in users |
+| `who` | `who -u` | Show currently logged-in users with idle time and PID |
+| `w` | `w` | Show logged-in users and what they are currently running |
+
+```bash
+users
+who -u
+w
+```
+
+## Login history
+
+| Command | Syntax | Description |
+|---|---|---|
+| `last` | `last` or `last -ap now` | Show the most recent login sessions |
+| `lastb` | `lastb` | Show failed login attempts |
+| `lastlog` | `lastlog` or `lastlog -u <username>` | List the last login time for all users, or a specific user |
+
+```bash
+# All recent sessions
+last
+last -ap now
+
+# Failed login attempts
+lastb
+
+# Last login for all users
+lastlog
+
+# Last login for a specific user
+lastlog -u frappe-user
+```
+
+<Tip>
+  Run `who -u` and `w` together to get both a session list and a view of what each logged-in user is actively doing.
+</Tip>

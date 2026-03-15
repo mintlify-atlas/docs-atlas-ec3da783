@@ -1,0 +1,63 @@
+---
+title: "Supervisor Configuration"
+description: "Configure Supervisor to manage Frappe bench worker processes."
+---
+
+Supervisor is a process control system that manages Frappe's background workers and queue processes. Frappe's `bench setup supervisor` command generates the necessary configuration automatically, but you may need to adjust it manually.
+
+## Edit the Supervisor configuration
+
+Open the main Supervisor configuration file:
+
+```bash
+sudo nano /etc/supervisor/supervisord.conf
+```
+
+## Set the correct file ownership
+
+Ensure Supervisor runs processes as your Frappe user. Find or add the `chown` directive under the `[unix_http_server]` or `[supervisord]` section and set it to your Frappe username:
+
+```ini
+[unix_http_server]
+chown = yourfrappeusername:yourfrappeusername
+```
+
+Replace `yourfrappeusername` with the Linux user that owns the Frappe bench directory.
+
+## Restart Supervisor
+
+After making changes, restart the Supervisor service to apply them:
+
+```bash
+sudo -A systemctl restart supervisor
+```
+
+<Note>
+  The `-A` flag passes the sudo password via an askpass helper. You can also use `sudo systemctl restart supervisor` if you're running interactively.
+</Note>
+
+## Generate Frappe's Supervisor configuration
+
+Frappe can generate its own Supervisor configuration from the bench directory. Run this from inside your bench folder:
+
+```bash
+bench setup supervisor
+sudo ln -s $(pwd)/config/supervisor.conf /etc/supervisor/conf.d/frappe-bench.conf
+sudo supervisorctl reread
+sudo supervisorctl update
+```
+
+## Common Supervisor commands
+
+| Command | Description |
+|---------|-------------|
+| `sudo supervisorctl status` | Show status of all processes |
+| `sudo supervisorctl start frappe-bench:*` | Start all bench processes |
+| `sudo supervisorctl stop frappe-bench:*` | Stop all bench processes |
+| `sudo supervisorctl restart frappe-bench:*` | Restart all bench processes |
+| `sudo supervisorctl reread` | Reload configuration files |
+| `sudo supervisorctl update` | Apply configuration changes |
+
+<Tip>
+  After any changes to your bench (installing apps, adding sites), re-run `bench setup supervisor` and reload the configuration using `supervisorctl reread && supervisorctl update`.
+</Tip>

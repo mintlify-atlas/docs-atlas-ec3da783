@@ -1,0 +1,77 @@
+---
+title: "Managing MySQL Users"
+description: "Create MySQL users, grant privileges, and set passwords for use with Frappe and ERPNext."
+---
+
+Frappe creates a dedicated database user for each site, but you may need to manage MySQL users manually for administration or integration purposes.
+
+## Connect to MySQL
+
+```bash
+sudo mysql -u root -p
+```
+
+## Create a new user
+
+<Steps>
+  <Step title="Connect to MySQL">
+    ```bash
+    sudo mysql -u root -p
+    ```
+  </Step>
+
+  <Step title="Create the user">
+    Replace `new_user` and `password` with your desired username and password:
+
+    ```sql
+    CREATE USER 'new_user'@'localhost' IDENTIFIED BY 'password';
+    ```
+  </Step>
+
+  <Step title="Grant privileges">
+    To grant full privileges on all databases:
+
+    ```sql
+    GRANT ALL PRIVILEGES ON *.* TO 'new_user'@'localhost';
+    FLUSH PRIVILEGES;
+    ```
+
+    <Warning>
+      Granting `ALL PRIVILEGES ON *.*` gives the user superuser-equivalent access. For application users, prefer granting privileges only on specific databases.
+    </Warning>
+  </Step>
+</Steps>
+
+## Grant privileges to an admin user
+
+To grant all privileges with the ability to grant them to others:
+
+```sql
+GRANT ALL ON *.* TO 'admin'@'localhost' IDENTIFIED BY 'admin' WITH GRANT OPTION;
+```
+
+<Note>
+  The `WITH GRANT OPTION` clause allows the user to grant their own privileges to other users. Use with care.
+</Note>
+
+## Set the root user password
+
+To update the root password while logged in as root:
+
+```sql
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('mypass');
+```
+
+<Tip>
+  For a full password reset procedure when you cannot log in, see the [Change MySQL Root Password](/configuration/change-mysql-password) guide.
+</Tip>
+
+## Common privilege commands
+
+| Task | Command |
+|------|---------|
+| Grant on specific database | `GRANT ALL ON mydb.* TO 'user'@'localhost';` |
+| Revoke all privileges | `REVOKE ALL PRIVILEGES ON *.* FROM 'user'@'localhost';` |
+| Show user privileges | `SHOW GRANTS FOR 'user'@'localhost';` |
+| Drop a user | `DROP USER 'user'@'localhost';` |
+| Apply privilege changes | `FLUSH PRIVILEGES;` |

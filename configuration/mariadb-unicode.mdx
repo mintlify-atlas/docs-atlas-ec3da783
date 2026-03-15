@@ -1,0 +1,62 @@
+---
+title: "MariaDB Unicode Configuration"
+description: "Configure MariaDB to use utf8mb4 encoding for full Unicode support, including emoji and multilingual characters."
+---
+
+Frappe and ERPNext require MariaDB to use `utf8mb4` character encoding. Without this configuration, you may encounter errors when storing non-ASCII or emoji characters.
+
+<Note>
+  If you don't have `nano` installed, run `sudo apt install nano` before proceeding.
+</Note>
+
+## Configure utf8mb4 encoding
+
+<Steps>
+  <Step title="Edit the MariaDB configuration file">
+    Open the MariaDB configuration file in a text editor:
+
+    ```bash
+    sudo nano /etc/mysql/my.cnf
+    ```
+  </Step>
+
+  <Step title="Add the utf8mb4 settings">
+    Append the following configuration blocks to the file:
+
+    ```ini
+    [mysqld]
+    character-set-client-handshake = FALSE
+    character-set-server = utf8mb4
+    collation-server = utf8mb4_unicode_ci
+
+    [mysql]
+    default-character-set = utf8mb4
+    ```
+  </Step>
+
+  <Step title="Save the file">
+    Press `Ctrl+X`, then `Y`, then `Enter` to save and exit nano.
+  </Step>
+
+  <Step title="Restart the MariaDB service">
+    Apply the changes by restarting MariaDB:
+
+    ```bash
+    sudo service mysql restart
+    ```
+  </Step>
+</Steps>
+
+## Verify the configuration
+
+After restarting, you can verify the character set is applied correctly:
+
+```bash
+sudo mysql -u root -p -e "SHOW VARIABLES LIKE 'character_set_server'; SHOW VARIABLES LIKE 'collation_server';"
+```
+
+The output should show `utf8mb4` and `utf8mb4_unicode_ci` respectively.
+
+<Tip>
+  If you are setting up a new Frappe bench, apply this configuration **before** running `bench init` or creating any sites to avoid character set migration issues later.
+</Tip>

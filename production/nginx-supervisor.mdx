@@ -1,0 +1,105 @@
+---
+title: "Nginx and Supervisor"
+description: "Install and configure Nginx and Supervisor to serve ERPNext in production, including host file setup."
+---
+
+## Install and configure Supervisor
+
+<Steps>
+  <Step title="Install Supervisor">
+    ```bash
+    sudo apt -y install supervisor
+    ```
+  </Step>
+
+  <Step title="Generate the Supervisor configuration">
+    ```bash
+    bench setup supervisor
+    ```
+  </Step>
+
+  <Step title="Link the configuration file">
+    ```bash
+    sudo ln -s `pwd`/config/supervisor.conf /etc/supervisor/conf.d/frappe-bench.conf
+    ```
+  </Step>
+</Steps>
+
+## Install and configure Nginx
+
+<Steps>
+  <Step title="Install Nginx">
+    ```bash
+    sudo apt -y install nginx
+    ```
+  </Step>
+
+  <Step title="Generate the Nginx configuration">
+    ```bash
+    bench setup nginx
+    ```
+  </Step>
+
+  <Step title="Link the configuration file">
+    ```bash
+    sudo ln -s `pwd`/config/nginx.conf /etc/nginx/conf.d/frappe-bench.conf
+    ```
+  </Step>
+</Steps>
+
+## Add a site to the host system
+
+To access your site by hostname rather than IP address, add an entry to the hosts file:
+
+```bash
+sudo nano /etc/hosts
+```
+
+Add the following line:
+
+```text
+127.0.0.1  frappe.localhost
+```
+
+<Note>
+  Replace `frappe.localhost` with your actual site name if it differs.
+</Note>
+
+## Managing services
+
+Use the following commands to control production services when switching between development and production modes.
+
+<CodeGroup>
+
+```bash Stop production services
+sudo service supervisor stop
+sudo service redis stop
+sudo service nginx stop
+```
+
+```bash Start production services
+sudo service supervisor start
+sudo service redis start
+sudo service nginx start
+```
+
+```bash Check service status
+sudo service supervisor status
+sudo service redis status
+sudo service nginx status
+```
+
+</CodeGroup>
+
+### Running development mode
+
+After stopping production services, start the bench development server:
+
+```bash
+bench setup procfile
+bench start
+```
+
+<Warning>
+  Ensure you have a `Procfile` in your bench directory before running `bench start` in development mode.
+</Warning>

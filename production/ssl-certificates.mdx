@@ -1,0 +1,41 @@
+---
+title: "SSL Certificates"
+description: "Obtain and install a free Let's Encrypt SSL certificate for your ERPNext site using Certbot and the Nginx plugin."
+---
+
+<Steps>
+  <Step title="Add the Certbot PPA">
+    ```bash
+    sudo add-apt-repository ppa:certbot/certbot
+    sudo apt update
+    ```
+  </Step>
+
+  <Step title="Install Certbot with the Nginx plugin">
+    ```bash
+    sudo apt install python-certbot-nginx
+    ```
+  </Step>
+
+  <Step title="Obtain and install the certificate">
+    Run Certbot against your domain. Certbot will automatically modify your Nginx configuration to enable HTTPS:
+
+    ```bash
+    sudo certbot --nginx -d example.com
+    ```
+
+    Replace `example.com` with your actual domain name.
+
+    <Warning>
+      Your domain's DNS A record must point to this server's public IP address before running Certbot, or the certificate request will fail.
+    </Warning>
+  </Step>
+</Steps>
+
+<Note>
+  Let's Encrypt certificates expire after 90 days. Certbot installs a cron job or systemd timer to renew them automatically. You can test renewal with:
+
+  ```bash
+  sudo certbot renew --dry-run
+  ```
+</Note>

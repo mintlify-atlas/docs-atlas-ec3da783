@@ -1,0 +1,75 @@
+---
+title: "Network check"
+description: "Commands for inspecting open ports and managing processes that conflict with Frappe services."
+---
+
+Use these commands when a service fails to start because a port is already in use, or when you need to verify that Frappe's worker processes are listening correctly.
+
+## Install net-tools
+
+`netstat` is part of the `net-tools` package, which is not installed by default on minimal Ubuntu images:
+
+```bash
+sudo apt install net-tools
+```
+
+## Check open ports
+
+<Tabs>
+  <Tab title="netstat">
+    List all listening TCP and UDP ports:
+
+    ```bash
+    sudo netstat -tuln
+    ```
+
+    Filter for specific Frappe ports (web `8000`, socketio `9000`, Redis `11000`/`13000`):
+
+    ```bash
+    sudo netstat -tuln | grep '13000\|11000'
+    ```
+  </Tab>
+
+  <Tab title="lsof">
+    Identify which process is holding a specific port:
+
+    ```bash
+    sudo lsof -i :13000
+    ```
+
+    Replace `13000` with the port number you want to inspect. The output includes the PID in the second column.
+  </Tab>
+</Tabs>
+
+## Kill a process by PID
+
+Once you have identified the PID from `lsof` or `netstat`, terminate the process:
+
+```bash
+sudo kill <pid>
+```
+
+For example:
+
+```bash
+sudo kill 27381
+```
+
+<Warning>
+  `kill` sends `SIGTERM` by default, which allows the process to clean up. If the process does not stop, use `kill -9 <pid>` to force-terminate it — but only as a last resort, as this skips graceful shutdown.
+</Warning>
+
+## Common Frappe ports
+
+| Port | Service |
+|---|---|
+| `8000` | Frappe web server |
+| `9000` | Socket.IO server |
+| `11000` | Redis queue |
+| `13000` | Redis cache |
+| `3306` | MariaDB |
+| `6379` | Redis (default) |
+
+<Tip>
+  After resolving a port conflict, run `bench start` again or use `sudo service supervisor restart` if you are in production mode.
+</Tip>

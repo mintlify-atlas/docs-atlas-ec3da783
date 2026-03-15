@@ -1,0 +1,40 @@
+---
+title: "Disable CSRF Protection"
+description: "Disable CSRF protection on a Frappe site for development or API integration scenarios."
+---
+
+Frappe includes Cross-Site Request Forgery (CSRF) protection by default. In some development or integration scenarios — such as testing API clients or working with tools that cannot send CSRF tokens — you may need to disable this protection.
+
+<Warning>
+  Disabling CSRF protection removes an important security layer. **Never disable CSRF on a public-facing production site.** Only use this in isolated development environments or when you fully control all clients making requests.
+</Warning>
+
+## When to disable CSRF
+
+- Local development where you are testing API integrations
+- Automated testing scripts that do not support CSRF token handling
+- Internal tools running on a private network with no public exposure
+
+## Disable CSRF for a site
+
+Run the following command from your bench directory, replacing `frappe.localhost` with your site name:
+
+```bash
+bench --site frappe.localhost set-config ignore_csrf 1
+```
+
+This writes `ignore_csrf = 1` to the site's `site_config.json`.
+
+## Re-enable CSRF protection
+
+To re-enable CSRF protection, set the value back to `0`:
+
+```bash
+bench --site frappe.localhost set-config ignore_csrf 0
+```
+
+Or remove the key from `site_config.json` entirely — Frappe enforces CSRF by default when the key is absent.
+
+<Tip>
+  Instead of disabling CSRF entirely, consider using Frappe's API key and secret authentication for programmatic access. API key requests bypass CSRF requirements while keeping the protection active for browser sessions.
+</Tip>

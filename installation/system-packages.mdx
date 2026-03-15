@@ -1,0 +1,103 @@
+---
+title: "System packages"
+description: "Install Git, Python, pip, virtualenv, MariaDB dev files, Redis, and wkhtmltopdf on Ubuntu."
+---
+
+This page covers installing the core system packages that Frappe depends on. Run all commands as a user with `sudo` privileges.
+
+<Steps>
+  <Step title="Install Git">
+    Git is required to fetch Frappe apps and manage bench repositories.
+
+    ```bash
+    sudo apt-get install git
+    ```
+  </Step>
+
+  <Step title="Install Python dev headers">
+    The `python3-dev` package provides the header files needed to compile Python C extensions.
+
+    ```bash
+    sudo apt-get install python3-dev
+    ```
+  </Step>
+
+  <Step title="Install setuptools and pip">
+    `pip` is the Python package manager. `setuptools` is required to build and install Python packages.
+
+    ```bash
+    sudo apt-get install python3-setuptools python3-pip
+    ```
+  </Step>
+
+  <Step title="Install virtualenv">
+    Frappe bench uses a virtual environment to isolate Python dependencies.
+
+    ```bash
+    sudo apt-get install virtualenv
+    ```
+
+    Check your Python version and install the matching `venv` package:
+
+    ```bash
+    python3 -V
+    ```
+
+    <Tabs>
+      <Tab title="Python 3.8">
+        ```bash
+        sudo apt install python3.8-venv
+        ```
+      </Tab>
+      <Tab title="Python 3.10">
+        ```bash
+        sudo apt install python3.10-venv
+        ```
+      </Tab>
+    </Tabs>
+
+    <Tip>
+      Run `python3 -V` to confirm your Python version before choosing the correct `venv` package.
+    </Tip>
+  </Step>
+
+  <Step title="Install MariaDB dev files">
+    The `libmysqlclient-dev` package provides the C headers needed to compile the `mysqlclient` Python package.
+
+    ```bash
+    sudo apt-get install libmysqlclient-dev
+    ```
+
+    <Note>
+      Install this **after** MariaDB server is installed (covered in the [MariaDB setup](/installation/mariadb) step). The package will not be found if the MariaDB repository has not been added yet.
+    </Note>
+  </Step>
+
+  <Step title="Install Redis">
+    Redis is used by Frappe for caching, queuing background jobs, and real-time updates.
+
+    ```bash
+    sudo apt-get install redis-server
+    ```
+  </Step>
+
+  <Step title="Install wkhtmltopdf">
+    wkhtmltopdf generates PDF documents from HTML in ERPNext (invoices, reports, etc.).
+
+    ```bash
+    sudo apt-get install xvfb libfontconfig wkhtmltopdf
+    ```
+
+    <Warning>
+      Only install wkhtmltopdf via this `apt` command. Versions from the wkhtmltopdf website may not include the patched Qt build required by Frappe.
+    </Warning>
+  </Step>
+</Steps>
+
+## Next step
+
+With the core packages installed, proceed to set up MariaDB:
+
+<Card title="Install and configure MariaDB" icon="database" href="/installation/mariadb">
+  Install MariaDB 10.3 and configure it for Unicode support
+</Card>

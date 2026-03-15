@@ -1,0 +1,64 @@
+---
+title: "Redis Configuration"
+description: "Manage the Redis service and configure custom ports for Frappe bench environments."
+---
+
+Frappe uses Redis for caching, queuing, and real-time communication. This page covers service management and port configuration.
+
+## Service management
+
+Use the following commands to control the Redis service:
+
+```bash
+sudo service redis-server start
+sudo service redis-server stop
+sudo service redis-server restart
+sudo service redis-server status
+```
+
+## Configure a custom port
+
+By default, Redis listens on port `6379`. To change it:
+
+<Steps>
+  <Step title="Open the Redis configuration file">
+    ```bash
+    sudo nano /etc/redis/redis.conf
+    ```
+  </Step>
+
+  <Step title="Change the port number">
+    Find the `port` directive and update it. Comment out the default line and add your new port:
+
+    ```ini
+    # port 6379
+    port 11000
+    ```
+  </Step>
+
+  <Step title="Save and restart Redis">
+    Save the file (`Ctrl+X`, `Y`, `Enter`) and restart the service:
+
+    ```bash
+    sudo service redis-server restart
+    ```
+  </Step>
+
+  <Step title="Test the new port">
+    Verify Redis is responding on the new port:
+
+    ```bash
+    redis-cli -h localhost -p 11000 ping
+    ```
+
+    You should see `PONG` in the output.
+  </Step>
+</Steps>
+
+<Warning>
+  If you change Redis ports after setting up a Frappe bench, you must update the bench's Redis configuration as well. Run `bench setup redis` and then `bench restart` to apply the new port settings.
+</Warning>
+
+<Note>
+  Frappe uses multiple Redis instances for different purposes (cache, queue, socketio). Each instance has its own port configured in your bench's `Procfile` and `common_site_config.json`.
+</Note>

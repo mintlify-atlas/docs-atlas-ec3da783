@@ -1,0 +1,95 @@
+---
+title: "DNS Multitenancy"
+description: "Configure DNS-based multitenancy in Frappe to serve multiple sites from a single bench using subdomain routing."
+---
+
+Frappe supports DNS-based multitenancy, where each site is identified by its hostname (domain name) rather than requiring you to specify the site name manually. This is the standard approach for hosting multiple ERPNext sites on a single server.
+
+## Enable DNS multitenancy
+
+From inside your bench directory:
+
+```bash
+bench config dns_multitenant on
+```
+
+To disable it:
+
+```bash
+bench config dns_multitenant off
+```
+
+## Set the current site
+
+When DNS multitenancy is off, Frappe uses the site name in `sites/currentsite.txt` to determine the active site:
+
+```bash
+nano sites/currentsite.txt
+```
+
+Write your site name in the file, for example:
+
+```text
+banna.com
+```
+
+## Create a new site
+
+The `bench new-site` command accepts full database and admin configuration inline. The example below shows all available options:
+
+```bash
+bench new-site \
+  --db-name [db_name] \
+  --db-password [db_password] \
+  --db-type mariadb \
+  --db-host 127.0.0.1 \
+  --db-port 3306 \
+  --mariadb-root-username root \
+  --mariadb-root-password [root_password] \
+  --no-mariadb-socket \
+  --admin-password Admin \
+  --install-app erpnext \
+  [sitename].cybererps.com
+```
+
+Replace the bracketed placeholders with your actual values before running.
+
+<Note>
+  The `--no-mariadb-socket` flag forces Frappe to connect to MariaDB via TCP rather than a Unix socket. This is required when specifying `--db-host 127.0.0.1`.
+</Note>
+
+## Drop a site
+
+<Warning>
+  Dropping a site permanently deletes all of its data, including the database and uploaded files. This action cannot be undone. Back up the site before proceeding.
+</Warning>
+
+```bash
+bench drop-site \
+  --mariadb-root-username admin@localhost \
+  --mariadb-root-password admin \
+  --force \
+  banna.com
+```
+
+The `--force` flag bypasses the confirmation prompt.
+
+## After configuration changes
+
+After enabling DNS multitenancy or adding new sites, regenerate and reload your Nginx and Supervisor configurations:
+
+```bash
+bench setup nginx
+sudo service nginx reload
+bench setup supervisor
+sudo supervisorctl reread && sudo supervisorctl update
+```
+
+<Columns cols={2}>
+  <Card title="Nginx Configuration" icon="server" href="/configuration/nginx-config">
+    Set up Nginx as a reverse proxy for your Frappe bench.
+  </Card>
+  <Card title="Supervisor Configuration" icon="settings" href="/configuration/supervisor-config">
+    Manage Frappe worker processes with Supervisor.
+  </Card>
+</Columns>

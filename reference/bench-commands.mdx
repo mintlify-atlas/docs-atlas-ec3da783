@@ -1,0 +1,159 @@
+---
+title: "Bench commands"
+description: "Complete reference for bench CLI commands used to manage sites, apps, services, and configuration."
+---
+
+All `bench` commands must be run from inside your `frappe-bench` directory. Commands that target a specific site require the `--site` flag.
+
+## Site management
+
+| Command | Description |
+|---|---|
+| `bench new-site <site>` | Create a new site with an interactive prompt for passwords |
+| `bench new-site --db-name <n> --db-password <p> --db-type mariadb --db-host <h> --db-port <port> --mariadb-root-username <u> --mariadb-root-password <p> --no-mariadb-socket --admin-password <p> --install-app erpnext <site>` | Create a site with all options provided non-interactively |
+| `bench drop-site --mariadb-root-username <u> --mariadb-root-password <p> --force <site>` | Delete a site and its database |
+| `bench --site <site> backup` | Create a backup of the site |
+
+<Tabs>
+  <Tab title="Basic site creation">
+    ```bash
+    bench new-site dcode.com
+    ```
+  </Tab>
+  <Tab title="Non-interactive site creation">
+    ```bash
+    bench new-site \
+      --db-name mysite \
+      --db-password secret \
+      --db-type mariadb \
+      --db-host 127.0.0.1 \
+      --db-port 3306 \
+      --mariadb-root-username root \
+      --mariadb-root-password secret \
+      --no-mariadb-socket \
+      --admin-password Admin \
+      --install-app erpnext \
+      mysite.cybererps.com
+    ```
+  </Tab>
+  <Tab title="Drop a site">
+    ```bash
+    bench drop-site \
+      --mariadb-root-username admin@localhost \
+      --mariadb-root-password admin \
+      --force \
+      banna.com
+    ```
+  </Tab>
+</Tabs>
+
+## App management
+
+| Command | Description |
+|---|---|
+| `bench get-app <app> --branch <branch>` | Download an app by name |
+| `bench get-app <url> --branch <branch>` | Download an app from a Git URL |
+| `bench --site <site> install-app <app>` | Install a downloaded app on a site |
+| `bench add-frappe-ui` | Add the Frappe UI scaffold to the bench |
+
+```bash
+# Download ERPNext
+bench get-app erpnext --branch version-15
+
+# Or download from GitHub directly
+bench get-app https://github.com/frappe/erpnext --branch version-15
+
+# Install on your site
+bench --site dcode.com install-app erpnext
+```
+
+## Bench control
+
+| Command | Description |
+|---|---|
+| `bench start` | Start all bench processes (development mode) |
+| `bench restart` | Restart all bench processes |
+| `bench setup procfile` | Regenerate the `Procfile` for Honcho/Supervisor |
+
+```bash
+bench start
+bench restart
+bench setup procfile
+```
+
+## Production setup
+
+| Command | Description |
+|---|---|
+| `bench setup production <user>` | Configure Nginx, Supervisor, and systemd for production |
+| `bench setup nginx` | Regenerate the Nginx configuration file |
+| `bench setup supervisor` | Regenerate the Supervisor configuration file |
+| `bench setup redis` | Regenerate Redis configuration files |
+
+```bash
+bench setup production dcode-frappe
+bench setup nginx
+bench setup supervisor
+bench setup redis
+```
+
+<Note>
+  After running `bench setup production`, reload Nginx and restart Supervisor for changes to take effect.
+</Note>
+
+## Site utilities
+
+| Command | Description |
+|---|---|
+| `bench --site <site> console` | Open an interactive Python console for the site |
+| `bench --site <site> mariadb` | Open a MariaDB shell for the site's database |
+| `bench --site <site> backup` | Create a compressed backup of the site |
+
+```bash
+bench --site library.test console
+bench --site library.test mariadb
+bench --site library.test backup
+```
+
+## Configuration
+
+| Command | Description |
+|---|---|
+| `bench config dns_multitenant on` | Enable DNS-based multitenancy |
+| `bench config dns_multitenant off` | Disable DNS-based multitenancy |
+| `bench set-nginx-port <site> <port>` | Set a custom Nginx port for a site |
+| `bench --site <site> set-config <key> <value>` | Set a site-level configuration value |
+
+```bash
+bench config dns_multitenant on
+bench set-nginx-port site2name 82
+bench --site frappe.localhost set-config ignore_csrf 1
+```
+
+## Updates and branch management
+
+| Command | Description |
+|---|---|
+| `bench switch-to-branch <branch> <apps...> --upgrade` | Switch one or more apps to a different branch |
+| `git pull upstream <branch>` | Pull the latest commits for the current branch |
+| `bench get-app --branch=<branch> <app>` | Re-fetch an app at a specific branch |
+
+```bash
+bench switch-to-branch version-15 frappe erpnext --upgrade
+git pull upstream version-15
+bench get-app --branch=version-15 frappe
+```
+
+## Python environment
+
+| Command | Description |
+|---|---|
+| `source env/bin/activate` | Activate the bench's Python virtual environment |
+| `source env/bin/deactivate` | Deactivate the virtual environment |
+| `./env/bin/python -m pip install -q -U -e /apps/<app>` | Reinstall an app's Python package in editable mode |
+
+```bash
+source env/bin/activate
+source env/bin/deactivate
+./env/bin/python -m pip install -q -U -e /apps/frappe
+```

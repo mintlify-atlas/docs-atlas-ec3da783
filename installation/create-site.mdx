@@ -1,0 +1,50 @@
+---
+title: "Create a site"
+description: "Create a new Frappe site using bench new-site."
+---
+
+A Frappe "site" is a single tenant instance with its own database and configuration. You can host multiple sites on a single bench.
+
+## Create the site
+
+Run the following command from inside your `frappe-bench` directory:
+
+```bash
+bench new-site dcode.com
+```
+
+Replace `dcode.com` with your own domain or a local hostname (for example, `mysite.localhost`).
+
+During site creation, `bench` will:
+
+1. Create a new MariaDB database and user for the site
+2. Run Frappe's database migrations
+3. Create the default administrator account
+
+<Note>
+  You will be prompted to enter the MariaDB root password you set during `mysql_secure_installation`, and to set an administrator password for the site.
+</Note>
+
+## Verify the site
+
+After creation, start the bench and open the site in your browser:
+
+```bash
+bench start
+```
+
+Navigate to `http://localhost:8000` in your browser. You should see the Frappe login screen.
+
+<Tip>
+  If you have multiple sites on the same bench, set the default site so `bench` commands know which site to target:
+
+  ```bash
+  bench use dcode.com
+  ```
+</Tip>
+
+## Next step
+
+<Card title="Install ERPNext" icon="building" href="/installation/install-erpnext">
+  Get the ERPNext app and install it on your site
+</Card>

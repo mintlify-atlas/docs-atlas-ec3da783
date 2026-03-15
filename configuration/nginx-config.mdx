@@ -1,0 +1,79 @@
+---
+title: "Nginx Configuration"
+description: "Set up Nginx as a reverse proxy for Frappe bench, including installation and symlink configuration."
+---
+
+Nginx acts as the reverse proxy for Frappe, handling incoming HTTP requests and forwarding them to the appropriate Frappe site. Frappe's `bench setup nginx` command generates the configuration automatically.
+
+## Install Nginx and Supervisor
+
+If Nginx is not already installed:
+
+```bash
+sudo apt -y install nginx
+```
+
+<Note>
+  Supervisor is often installed alongside Nginx for process management. See the [Supervisor Configuration](/configuration/supervisor-config) guide for setup details.
+</Note>
+
+## Generate Frappe's Nginx configuration
+
+From inside your bench directory, run:
+
+```bash
+bench setup nginx
+```
+
+This generates an `nginx.conf` file at `config/nginx.conf` inside your bench folder.
+
+## Link the configuration to Nginx
+
+Create a symlink so Nginx picks up the Frappe configuration:
+
+```bash
+sudo ln -s $(pwd)/config/nginx.conf /etc/nginx/conf.d/frappe-bench.conf
+```
+
+<Note>
+  The `$(pwd)` subshell expansion captures the current working directory. Run this command from inside your bench root (e.g., `/home/frappe/frappe-bench`).
+</Note>
+
+## Test and reload Nginx
+
+Before reloading, verify the configuration has no syntax errors:
+
+```bash
+sudo nginx -t
+```
+
+If the test passes, reload Nginx:
+
+```bash
+sudo service nginx reload
+```
+
+## Update the configuration
+
+Whenever you add a new site or change bench settings, regenerate and reload:
+
+```bash
+bench setup nginx
+sudo service nginx reload
+```
+
+<Warning>
+  If you have custom modifications to the Nginx configuration, `bench setup nginx` will overwrite the generated file. Back up any custom changes before regenerating.
+</Warning>
+
+## Verify Nginx is running
+
+```bash
+sudo service nginx status
+```
+
+The output should show `active (running)`. If Nginx fails to start, check the error log:
+
+```bash
+sudo tail -n 50 /var/log/nginx/error.log
+```
