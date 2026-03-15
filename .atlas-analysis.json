@@ -1,0 +1,129 @@
+{
+  "projectType": "general",
+  "projectName": "Frappe & ERPNext Installation Guide",
+  "projectDescription": "A comprehensive step-by-step guide for installing Frappe and ERPNext on Ubuntu and other Linux systems.",
+  "theme": "linden",
+  "primaryColor": "#b26c55",
+  "lightColor": "#1d2d5a",
+  "darkColor": "#664e5a",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Installation Guide",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": ["introduction", "prerequisites"]
+          },
+          {
+            "group": "Ubuntu Installation",
+            "pages": [
+              "installation/system-packages",
+              "installation/mariadb",
+              "installation/redis-nodejs",
+              "installation/frappe-bench",
+              "installation/create-site",
+              "installation/install-erpnext"
+            ]
+          },
+          {
+            "group": "ArchLinux Installation",
+            "pages": [
+              "archlinux/install-archlinux"
+            ]
+          },
+          {
+            "group": "Production Setup",
+            "pages": [
+              "production/production-setup",
+              "production/nginx-supervisor",
+              "production/multi-site",
+              "production/ssl-certificates"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Configuration",
+        "groups": [
+          {
+            "group": "Database",
+            "pages": [
+              "configuration/mariadb-unicode",
+              "configuration/change-mysql-password",
+              "configuration/move-mysql-datadir",
+              "configuration/mysql-users"
+            ]
+          },
+          {
+            "group": "Services",
+            "pages": [
+              "configuration/redis-config",
+              "configuration/supervisor-config",
+              "configuration/nginx-config"
+            ]
+          },
+          {
+            "group": "Frappe & ERPNext",
+            "pages": [
+              "configuration/erpnext-env-vars",
+              "configuration/disable-csrf",
+              "configuration/dns-multitenancy"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Reference",
+        "groups": [
+          {
+            "group": "Bash Scripts",
+            "pages": [
+              "reference/automation-scripts"
+            ]
+          },
+          {
+            "group": "Commands",
+            "pages": [
+              "reference/bench-commands",
+              "reference/linux-commands",
+              "reference/service-management"
+            ]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": [
+              "reference/troubleshooting",
+              "reference/network-check"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Step-by-step Frappe and ERPNext installation on Ubuntu",
+    "MariaDB configuration for unicode and production use",
+    "Production server setup with Nginx and Supervisor",
+    "Multi-site configuration with port-based routing",
+    "Automation bash scripts for common tasks",
+    "ArchLinux installation instructions",
+    "SSL/TLS certificate setup with Let's Encrypt",
+    "Database management and migration guides"
+  ],
+  "publicApiSurface": [
+    "bench init",
+    "bench new-site",
+    "bench get-app",
+    "bench install-app",
+    "bench setup production",
+    "bench setup nginx",
+    "bench setup supervisor",
+    "bench start",
+    "bench restart",
+    "bench update",
+    "bench drop-site",
+    "bench config dns_multitenant",
+    "bench set-nginx-port"
+  ]
+}
